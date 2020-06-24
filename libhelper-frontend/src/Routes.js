@@ -1,17 +1,18 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Switch, Route, Redirect, BrowserRouter } from 'react-router-dom';
 
-import Login from './Auth/Login';
-import Signup from './Auth/Signup'
+import Auth from './Auth';
 import Home from './Home';
 import SiteNav from './SiteNav';
+import Library from './Library';
+import Collection from './Collection';
 
 import jwt_decode from 'jwt-decode'
 import UserContext from './utils/userContext';
 
 function Routes() {
   const [isLoggedIn, setLoggedIn] = useState(true);
-  const { updateUser } = useContext(UserContext);
+  const { user, updateUser, logout } = useContext(UserContext);
 
   //don't need to check if token is valid, just if there is one
   //backend validates token
@@ -31,26 +32,8 @@ function Routes() {
   // async function getCurrentUser() {
   //   let token = localStorage.getItem("_token");
   //   let decoded = jwt_decode(token);
-  //   let currentUser = await JoblyAPI.getUser(decoded.username);
+  //   let currentUser = await backendAPI.getUser(decoded.username);
   //   updateUser(currentUser);
-  // }
-
-  // async function login(currentUser) {
-  //   let token = await JoblyAPI.loginUser(currentUser)
-  //   localStorage.setItem("_token", token);
-  //   setLoggedIn(true);
-  // }
-
-  function logout() {
-    localStorage.removeItem("_token");
-    setLoggedIn(false);
-    updateUser(null);
-  }
-
-  // async function create(currentUser) {
-  //   let token = await JoblyAPI.createUser(currentUser);
-  //   localStorage.setItem("_token", token);
-  //   setLoggedIn(true);
   // }
 
   return (
@@ -60,6 +43,19 @@ function Routes() {
         <Route exact path="/">
           <Home />
         </Route>
+        <Route exact path="/login">
+          <Auth view="login"/>
+        </Route>
+        <Route exact path="/signup">
+          <Auth view="signup"/>
+        </Route>
+        <Route exact path="/library">
+          <Library />
+        </Route>
+        <Route exact path="/collection/:id">
+          <Collection />
+        </Route>
+
         <Redirect to="/" />
       </Switch>
     </BrowserRouter>

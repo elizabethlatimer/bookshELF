@@ -3,7 +3,6 @@ import { Navbar, Nav, NavDropdown} from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
 function SiteNav({ isLoggedIn, logout }) {
-  console.log(isLoggedIn)
   const loggedInNav = <Navbar.Collapse id="basic-navbar-nav">
     <Nav className="ml-auto">
       <Nav.Link eventKey="1" as={Link} to="/library">My Library</Nav.Link>
