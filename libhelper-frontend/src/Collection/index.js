@@ -13,7 +13,7 @@ const sampleCollection = {
     {id: 2, title: "Test Book", img: "https://marketplace.canva.com/EAD7WWWtKSQ/1/0/251w/canva-purple-and-red-leaves-illustration-children%27s-book-cover-hNI7HYnNVQQ.jpg"},
     {id: 3, title: "Test Book", img: "https://marketplace.canva.com/EAD7WWWtKSQ/1/0/251w/canva-purple-and-red-leaves-illustration-children%27s-book-cover-hNI7HYnNVQQ.jpg"},
     {id: 4, title: "Test Book", img: "https://marketplace.canva.com/EAD7WWWtKSQ/1/0/251w/canva-purple-and-red-leaves-illustration-children%27s-book-cover-hNI7HYnNVQQ.jpg"},
-    {id: 5, title: "Test Book", img: "https://marketplace.canva.com/EAD7WWWtKSQ/1/0/251w/canva-purple-and-red-leaves-illustration-children%27s-book-cover-hNI7HYnNVQQ.jpg"},
+    {id: 5, title: "Test Book With a Really Long Title", img: "https://marketplace.canva.com/EAD7WWWtKSQ/1/0/251w/canva-purple-and-red-leaves-illustration-children%27s-book-cover-hNI7HYnNVQQ.jpg"},
   ]}
 
 function Collection() {
@@ -33,7 +33,7 @@ function Collection() {
     <Container>
       <h3>{collection.name}</h3>
       <p>{collection.description}</p>
-      <Row>
+      <Row className="justify-content-center">
         {collection.books.map(book => <BookCard key={book.id} book={book} />)}
       </Row>
     </Container>
