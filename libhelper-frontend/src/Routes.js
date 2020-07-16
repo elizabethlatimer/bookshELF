@@ -6,6 +6,7 @@ import Home from './Home';
 import SiteNav from './SiteNav';
 import Library from './Library';
 import Collection from './Collection';
+import BookDetail from './BookDetail';
 
 import jwt_decode from 'jwt-decode'
 import UserContext from './utils/userContext';
@@ -54,6 +55,9 @@ function Routes() {
         </Route>
         <Route exact path="/collection/:id">
           <Collection />
+        </Route>
+        <Route exact path="/book/:id">
+          <BookDetail />
         </Route>
 
         <Redirect to="/" />

@@ -9,6 +9,8 @@ const dummyCollectionList = [
   {name: "List Two", number: 16, description: "This is a list of books", id: 2},
   {name: "List Three", number: 16, description: "This is a list of books", id: 3}]
 
+let tempID = 4;
+
 function Library() {
   const [adding, setAdding] = useState(false);
 
@@ -18,6 +20,12 @@ function Library() {
 
   function hideForm() {
     setAdding(false);
+  }
+
+  function addToCollections(title, description) {
+    let newCollection = {name: title, number: 0, description: description, id: tempID};
+    tempID++;
+    dummyCollectionList.push(newCollection);
   }
 
   return (
@@ -30,7 +38,7 @@ function Library() {
     </Row>
     {!adding
     ?<Button variant="primary" onClick={showForm}>Add a Collection</Button>
-    : <AddCollection cancelAdd={hideForm} />}
+    : <AddCollection closeForm={hideForm} addCollection={addToCollections} />}
     </Container>
   )
 

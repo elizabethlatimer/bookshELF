@@ -1,0 +1,19 @@
+.BookInfoStandard {
+    width: 80%;
+    margin: 25px auto;
+    padding: 5px;
+    display: flex;
+    justify-content: flex-start;
+    background-color: rgb(87, 145, 112);
+
+    table {
+    text-align: left;
+    margin: 7px;
+        td {
+            vertical-align: top;
+            padding-left: 10px;
+        }
+    }
+
+}
+

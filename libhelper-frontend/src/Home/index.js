@@ -5,7 +5,6 @@ import './Home.scss';
 import background from '../shared/images/background-home.jpg'
 
 function Home() {
-  console.log("rendering home")
 
   return (
     <div className="Home">
