@@ -6,7 +6,7 @@ class Collection {
       `SELECT id, collection_title, collection_description
         FROM collections JOIN users_collections on collection_id = id
         WHERE username = $1`,
-        [username]
+      [username]
     );
 
     return collections.rows;
@@ -17,7 +17,7 @@ class Collection {
       `SELECT collection_title, collection_description
         FROM collections
         WHERE id = $1`,
-        [id]
+      [id]
     )
 
     let collection = collectionRes.rows[0];
@@ -32,7 +32,7 @@ class Collection {
       `SELECT title, author, book_description, publisher, published_year, personal_notes, loaned, personal_rating
         FROM books JOIN users_books ON book_id = id
         WHERE collection_id = $1`,
-        [id]
+      [id]
     );
 
     collection.books = books.rows;
@@ -58,8 +58,54 @@ class Collection {
 
   }
 
-  static async addBook(book) {
-    let [id, title, author, book_description, publisher, published_year]
+  static async addBook(username, collection_id, book) {
+    let [id,
+      title,
+      author,
+      book_description,
+      publisher,
+      published_year,
+      personal_notes,
+      loaned,
+      personal_rating] = book;
+
+    let inCollection = await db.query(
+      `SELECT username FROM users_books
+        WHERE book_id = $1 AND collection_id = $2`,
+        [id, collection_id]
+    );
+
+    if (inCollection.rows[0]) {
+      let duplicateError = new Error(
+        `This book has already been added to this collection`);
+      duplicateError.status = 409; // 409 Conflict
+      throw duplicateError
+    }
+
+    await db.query(
+      `INSERT INTO users_books (book_id, username, collection_id, personal_notes, loaned, personal_rating)
+        VALUES ($1, $2, $3, $4, $5, $6)`,
+        [id, username, collection_id, personal_notes, loaned, personal_rating]
+    )
+
+    let inBooks = await db.query(
+      `SELECT title FROM books
+        WHERE id = $1`, [id]
+    )
+
+    if (!inBooks.rows[0]) {
+      await db.query(
+        `INSERT INTO books (id, title, author, book_description, publisher, published_year)
+          VALUES ($1, $2, $3, $4, $5, $6)
+          RETURNING id`,
+          [id, title, author, book_description, publisher, published_year]
+      );
+    }
+
+
+
+
+
 
   }
 
