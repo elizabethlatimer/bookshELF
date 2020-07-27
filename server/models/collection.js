@@ -58,7 +58,7 @@ class Collection {
 
   }
 
-  static async addBook(username, collection_id, book) {
+  static async addBookToCollection(username, collection_id, book) {
     let [id,
       title,
       author,
@@ -91,7 +91,7 @@ class Collection {
     let inBooks = await db.query(
       `SELECT title FROM books
         WHERE id = $1`, [id]
-    )
+    );
 
     if (!inBooks.rows[0]) {
       await db.query(
@@ -102,11 +102,14 @@ class Collection {
       );
     }
 
+  }
 
+  static async updateCollection() {
+    //TODO function to update collection title, description
+  }
 
-
-
-
+  static async addUserToCollection() {
+    //TODO fumction to add user to collection
   }
 
 }

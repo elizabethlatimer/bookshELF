@@ -6,7 +6,5 @@ class Books {
     //return list of found books
   }
 
-  static async saveBook (data) {
-    //
-  }
+
 }
