@@ -9,7 +9,15 @@ app.use(express.json());
 // for processing forms:
 app.use(express.urlencoded({ extended: true }));
 
-const userRoutes =
+const userRoutes = require('./routes/userRoutes');
+const authRoutes = require("./routes/authRoutes");
+const bookRoutes = require("./routes/bookRoutes");
+const collectionRoutes = require("./routes/collectionRoutes");
+
+app.use("/users", userRoutes);
+app.use("/books", bookRoutes);
+app.use("/collections", collectionRoutes);
+app.use("/", authRoutes);
 
 app.use(function(req, res, next) {
   const notFoundError = new ExpressError("Not Found", 404);
