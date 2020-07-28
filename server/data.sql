@@ -7,10 +7,11 @@ DROP TABLE IF EXISTS collections;
 CREATE TABLE books (
     id text PRIMARY KEY,
     title text NOT NULL,
-    author text NOT NULL,
+    authors text ARRAY NOT NULL,
     book_description text NOT NULL,
     publisher text,
-    published_year text
+    published_year text,
+    thumbnail text NOT NULL
 );
 
 CREATE TABLE users (

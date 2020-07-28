@@ -30,7 +30,7 @@ class Collection {
     }
 
     let books = await db.query(
-      `SELECT title, author, book_description, publisher, published_year, personal_notes, loaned, personal_rating
+      `SELECT title, authors, book_description, publisher, published_year, thumbnail, personal_notes, loaned, personal_rating
         FROM books JOIN users_books ON book_id = id
         WHERE collection_id = $1`,
       [id]
@@ -62,10 +62,11 @@ class Collection {
   static async addBookToCollection(username, collection_id, book) {
     let [id,
       title,
-      author,
+      authors,
       book_description,
       publisher,
       published_year,
+      thumbnail,
       personal_notes,
       loaned,
       personal_rating] = book;
@@ -94,10 +95,10 @@ class Collection {
 
     if (!inBooks.rows[0]) {
       await db.query(
-        `INSERT INTO books (id, title, author, book_description, publisher, published_year)
+        `INSERT INTO books (id, title, authors, book_description, publisher, published_year, thumbnail)
           VALUES ($1, $2, $3, $4, $5, $6)
           RETURNING id`,
-          [id, title, author, book_description, publisher, published_year]
+          [id, title, authors, book_description, publisher, published_year, thumbnail]
       );
     }
 
