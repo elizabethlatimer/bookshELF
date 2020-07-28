@@ -1,5 +1,8 @@
 const db = require('../db');
 
+const expressError = require('../helpers/expressError');
+const partialUpdate = require('../helpers/partialUpdate');
+
 class Collection {
   static async getAllByUser(username) {
     let collections = await db.query(
@@ -23,9 +26,7 @@ class Collection {
     let collection = collectionRes.rows[0];
 
     if (!collection) {
-      const error = new Error(`Collection not found`);
-      error.status = 404;   // 404 NOT FOUND
-      throw error;
+      throw new expressError(`Collection not found`, 404);
     }
 
     let books = await db.query(
@@ -76,10 +77,8 @@ class Collection {
     );
 
     if (inCollection.rows[0]) {
-      let duplicateError = new Error(
-        `This book has already been added to this collection`);
-      duplicateError.status = 409; // 409 Conflict
-      throw duplicateError
+      throw new expressError(
+        `This book has already been added to this collection`, 409);
     }
 
     await db.query(
@@ -104,12 +103,18 @@ class Collection {
 
   }
 
-  static async updateCollection() {
-    //TODO function to update collection title, description
-  }
+  static async updateCollection(id, title, description) {
+    let result = await db.query(
+      `UPDATE collections
+        SET collection_title = $1, collection_description = $2
+        WHERE id = $3
+        RETURNING *`,
+        [title, description, id]
+    )
 
-  static async addUserToCollection() {
-    //TODO fumction to add user to collection
+    return result.rows[0]
   }
 
 }
+
+module.exports = Collection;
