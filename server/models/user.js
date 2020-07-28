@@ -1,50 +1,93 @@
 const db = require('../db');
 const bcrypt = require("bcrypt");
 
+const expressError = require('../helpers/expressError');
+const partialUpdate = require('../helpers/partialUpdate');
+const { BCRYPT_WORK_FACTOR } = require('../config');
+
 class User {
   static async register(data) {
-    //check username for duplicates
+    let duplicateCheck = await db.query(
+      `SELECT username FROM users
+        WHERE username = $1`, [data.username]
+    );
 
-    //hash password
+    if (duplicateCheck.rows[0]) {
+      throw new expressError(`Username not available`, 409);
+    }
 
-    //insert into users table
+    const hashedPassword = await bcrypt.hash(data.password, BCRYPT_WORK_FACTOR);
 
-    //return user info
+    let result = await db.query(
+      `INSERT INTO users (username, password, first_name, last_name, email)
+        VALUES ($1, $2, $3, $4, $5)
+        RETURNING username, password, first_name, last_name, email`,
+      [data.username, hashedPassword, data.first_name, data.last_name, data.email]
+    );
 
+    return result.rows[0];
   }
 
   static async authenticate(data) {
-    //try to get the user
+    const result = await db.query(
+      `SELECT username, password, first_name, last_name, email
+        FROM users
+        WHERE username = $1`,
+      [data.username]);
 
-    //if the user exists, use bcrypt to compare password with hashed password
+    const user = result.rows[0];
 
-    //if valid credentials, return user object
+    if (user) {
+      let validUser = await bcrypt.compare(data.password, user.password);
+      if (validUser) return user;
+    }
 
-    //if the user doesn't exist, or password is invalid, throw invalid credentials error
+    throw new expressError("Invalid Credentials", 401)
 
   }
 
-  static async update(username, data) {
-    //confirm password, throw error if incorrect
+  static async update(username, password, data) {
+    const result = await db.query(
+      `SELECT username, password
+        FROM users
+        WHERE username = $1`,
+      [username]);
 
-    //if password is being changed, hash new password
+    const user = result.rows[0];
 
-    //update user (use helper to create sql query for partial update)
+    let validUser = await bcrypt.compare(password, user.password);
 
-    //return updated user
+    if (validUser) {
+      if (data.password) {
+        let hashedPassword = await bcrypt.hash(data.password, BCRYPT_WORK_FACTOR);
+        data.password = hashedPassword;
+      }
 
+      let { query, values } = partialUpdate(
+        "users",
+        data,
+        "username",
+        username
+      );
+
+      const result = await db.query(query, values);
+      const updatedUser = result.rows[0];
+
+      delete updatedUser.password;
+
+      return updatedUser;
+    }
+    throw new expressError("Invalid password", 401);
   }
 
   static async findOne(username) {
-    //get info on username
-    //return user
+    const result = await db.query(
+      `SELECT username, first_name, last_name, email
+        FROM users
+        WHERE username = $1`,
+      [username]);
 
+    return result.rows[0];
   }
 
-  static async remove(username) {
-    //delete user
-    //throw error if user doesn't exist
-    //return undefined
-
-  }
 }
