@@ -9,6 +9,10 @@ app.use(express.json());
 // for processing forms:
 app.use(express.urlencoded({ extended: true }));
 
+// to allow cors between frontend and backend
+app.use(cors());
+
+
 const userRoutes = require('./routes/userRoutes');
 const authRoutes = require("./routes/authRoutes");
 const bookRoutes = require("./routes/bookRoutes");

@@ -42,12 +42,12 @@ class Collection {
 
   }
 
-  static async create(username, title, description) {
+  static async create(username, data) {
     let collection = await db.query(
       `INSERT INTO collections (collection_title, collection_description)
         VALUES ($1, $2)
         RETURNING id, collection_title, collection_description`,
-      [title, description]
+      [data.title, data.description]
     );
 
     db.query(
@@ -98,19 +98,18 @@ class Collection {
         `INSERT INTO books (id, title, authors, book_description, publisher, published_year, thumbnail)
           VALUES ($1, $2, $3, $4, $5, $6)
           RETURNING id`,
-          [id, title, authors, book_description, publisher, published_year, thumbnail]
+          [id, title, authors, book_description, publisher, published_year,thumbnail]
       );
     }
-
   }
 
-  static async updateCollection(id, title, description) {
+  static async updateCollection(id, data) {
     let result = await db.query(
       `UPDATE collections
         SET collection_title = $1, collection_description = $2
         WHERE id = $3
         RETURNING *`,
-        [title, description, id]
+        [data.title, data.description, id]
     )
 
     return result.rows[0]
