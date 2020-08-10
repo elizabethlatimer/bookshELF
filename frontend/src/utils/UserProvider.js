@@ -10,26 +10,23 @@ function UserProvider() {
     setUser(newUser)
   };
 
-  // const login = async(currentUser) => {
-  //   let token = await backendAPI.loginUser(currentUser)
-  //   localStorage.setItem("_token", token);
-  //   setLoggedIn(true);
-  // }
+  const login = async(currentUser) => {
+    let token = await backendAPI.loginUser(currentUser)
+    localStorage.setItem("_token", token);
+  }
 
   const logout = () => {
     localStorage.removeItem("_token");
-    // setLoggedIn(false);
     updateUser(null);
   }
 
-  // const create = async(currentUser) => {
-  //   let token = await backendAPI.createUser(currentUser);
-  //   localStorage.setItem("_token", token);
-  //   setLoggedIn(true);
-  // }
+  const create = async(currentUser) => {
+    let token = await backendAPI.createUser(currentUser);
+    localStorage.setItem("_token", token);
+  }
 
   return (
-    <UserContext.Provider value={{ user, updateUser,  logout,  }}>
+    <UserContext.Provider value={{ user, updateUser, logout, login, create }}>
       <Routes />
     </UserContext.Provider>
   );

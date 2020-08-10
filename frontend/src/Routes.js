@@ -12,30 +12,30 @@ import jwt_decode from 'jwt-decode'
 import UserContext from './utils/userContext';
 
 function Routes() {
-  const [isLoggedIn, setLoggedIn] = useState(true);
+  const [isLoggedIn, setLoggedIn] = useState(null);
   const { user, updateUser, logout } = useContext(UserContext);
 
-  //don't need to check if token is valid, just if there is one
-  //backend validates token
+  // don't need to check if token is valid, just if there is one
+  // backend validates token
 
-  // useEffect(() => {
-  //   checkToken();
-  //   if (isloggedIn) {
-  //     getCurrentUser()
-  //   }
-  // }, [isloggedIn])
+  useEffect(() => {
+    checkToken();
+    if (isloggedIn) {
+      getCurrentUser()
+    }
+  }, [isloggedIn, user])
 
-  // function checkToken() {
-  //   let token = localStorage.getItem("_token");
-  //   setLoggedIn(token ? true : false);
-  // }
+  function checkToken() {
+    let token = localStorage.getItem("_token");
+    setLoggedIn(token ? true : false);
+  }
 
-  // async function getCurrentUser() {
-  //   let token = localStorage.getItem("_token");
-  //   let decoded = jwt_decode(token);
-  //   let currentUser = await backendAPI.getUser(decoded.username);
-  //   updateUser(currentUser);
-  // }
+  async function getCurrentUser() {
+    let token = localStorage.getItem("_token");
+    let decoded = jwt_decode(token);
+    let currentUser = await backendAPI.getUser(decoded.username);
+    updateUser(currentUser);
+  }
 
   return (
     <BrowserRouter>

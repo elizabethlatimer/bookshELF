@@ -1,5 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Form, Button } from 'react-bootstrap';
+import { useHistory } from 'react-router-dom';
+
+import UserContext from './utils/userContext';
 
 const INITIAL_STATE = {
   name: '',
@@ -11,6 +14,8 @@ const INITIAL_STATE = {
 function Signup() {
 
   const [formState, setFormState] = useState(INITIAL_STATE);
+  const { create } = useContext(UserContext);
+  const history = useHistory();
 
   function handleChange(evt) {
     let { name, value } = evt.target;
@@ -19,6 +24,13 @@ function Signup() {
 
   function handleSubmit(evt) {
     evt.preventDefault();
+    try {
+      await create(formState);
+      history.push('/library');
+
+    } catch(err) {
+      console.error("Something went wrong", err)
+    }
 
   }
 

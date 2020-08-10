@@ -1,11 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Form, Button } from 'react-bootstrap';
+import UserContext from './utils/userContext';
+import { useHistory } from 'react-router-dom';
+
 
 const INITIAL_STATE = { email: "", password: "" }
 
 function Login() {
 
   const [formState, setFormState] = useState(INITIAL_STATE);
+  const [ alert, setAlert ] = useState(null);
+  const { login } = useContext(UserContext);
+  const history = useHistory();
 
   function handleChange(evt) {
     let { name, value } = evt.target;
@@ -14,7 +20,14 @@ function Login() {
 
   function handleSubmit(evt) {
     evt.preventDefault();
+    try {
+      await login(formState);
+      history.push('/library')
 
+    } catch (err) {
+      console.error("Login error", err)
+      setAlert("Something went wrong, please try again.")
+    }
   }
 
   return (
@@ -36,6 +49,7 @@ function Login() {
       </Form.Group>
 
       <Button variant="primary" type="submit">Login</Button>
+      {alert ? <p>{alert}</p> : null}
     </Form>
   )
 }
