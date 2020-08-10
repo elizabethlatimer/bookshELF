@@ -4,9 +4,11 @@ const Collection = require("../models/collection");
 const express = require("express");
 const router = new express.Router();
 
+const { authRequired } = require('../middleware/auth');
+
 //get all collections for a user
 
-router.get('/', async function (req, res, next) {
+router.get('/', authRequired, async function (req, res, next) {
   try {
     let collections = await Collection.getAllByUser(req.username);
 
@@ -21,7 +23,7 @@ router.get('/', async function (req, res, next) {
 //get collection by id
 //{collection: {collection_title, collection_description, books: []}}
 
-router.get('/:id', async function (req, res, next) {
+router.get('/:id', authRequired, async function (req, res, next) {
   try {
     let collection = await Collection.getOne(req.params.id);
     return res.json({ collection });
@@ -33,7 +35,7 @@ router.get('/:id', async function (req, res, next) {
 
 //post new collection
 
-router.post('/', async function (req, res, next) {
+router.post('/', authRequired, async function (req, res, next) {
   try {
     //TODO make and validate with jsonschema
 
@@ -48,7 +50,7 @@ router.post('/', async function (req, res, next) {
 
 //post new book to collection
 
-router.post('/:id', async function (req, res, next) {
+router.post('/:id', authRequired, async function (req, res, next) {
   try {
     //TODO made and validate req.body with json schema
     await Collection.addBookToCollection(req.username, req.params.id, req.body);
@@ -62,11 +64,11 @@ router.post('/:id', async function (req, res, next) {
 
 //put modify collection title/description
 
-router.put('/:id', async function (req, res, next) {
+router.put('/:id', authRequired, async function (req, res, next) {
   try {
     //validate body with jsonschema
     let update = await Collection.updateCollection(req.params.id, req.body);
-    return res.json({update})
+    return res.json({ update })
 
   } catch (err) {
     return next(err);

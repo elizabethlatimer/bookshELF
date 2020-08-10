@@ -58,9 +58,10 @@ class User {
     let validUser = await bcrypt.compare(password, user.password);
 
     if (validUser) {
-      if (data.password) {
+      if (data.newPassword) {
         let hashedPassword = await bcrypt.hash(data.password, BCRYPT_WORK_FACTOR);
         data.password = hashedPassword;
+        delete data.newPassword
       }
 
       let { query, values } = partialUpdate(
