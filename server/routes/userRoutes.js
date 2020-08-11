@@ -22,7 +22,7 @@ router.get('/', authRequired, async function (req, res, next) {
 
 router.post("/", async function (req, res, next) {
   try {
-    // delete req.body._token;
+    delete req.body._token;
     // const validation = validate(req.body, userNewSchema);
 
     // if (!validation.valid) {
@@ -37,6 +37,7 @@ router.post("/", async function (req, res, next) {
     return res.status(201).json({ token });
 
   } catch (err) {
+    console.error("Something went wrong in create route", err)
     return next(err);
   }
 });
@@ -45,7 +46,7 @@ router.post("/", async function (req, res, next) {
 
 router.patch('/', ensureCorrectUser, async function (req, res, next) {
   try {
-    // delete req.body._token;
+    delete req.body._token;
     // const validation = validate(req.body, userUpdateSchema);
 
       // if (!validation.valid) {
@@ -65,3 +66,4 @@ router.patch('/', ensureCorrectUser, async function (req, res, next) {
 
 })
 
+module.exports = router;

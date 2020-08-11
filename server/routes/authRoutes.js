@@ -12,6 +12,7 @@ router.post("/login", async function(req, res, next) {
     const token = createToken(user);
     return res.json({ token });
   } catch (e) {
+    console.error("Something went wrong in the login route")
     return next(e);
   }
 });

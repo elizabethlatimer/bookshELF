@@ -24,6 +24,7 @@ class User {
         RETURNING username, password, first_name, last_name, email`,
       [data.username, hashedPassword, data.first_name, data.last_name, data.email]
     );
+    console.log("new user", result.rows[0])
 
     return result.rows[0];
   }

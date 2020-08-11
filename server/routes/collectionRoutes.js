@@ -38,6 +38,7 @@ router.get('/:id', authRequired, async function (req, res, next) {
 router.post('/', authRequired, async function (req, res, next) {
   try {
     //TODO make and validate with jsonschema
+    console.log("Req.body", req.body)
 
     let collection = await Collection.create(req.username, req.body);
 

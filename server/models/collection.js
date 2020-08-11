@@ -43,6 +43,7 @@ class Collection {
   }
 
   static async create(username, data) {
+    console.log(data)
     let collection = await db.query(
       `INSERT INTO collections (collection_title, collection_description)
         VALUES ($1, $2)
@@ -50,7 +51,7 @@ class Collection {
       [data.title, data.description]
     );
 
-    db.query(
+    await db.query(
       `INSERT INTO users_collections (username, collection_id)
         VALUES ($1, $2)`, [username, collection.rows[0].id]
     )
