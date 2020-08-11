@@ -1,5 +1,6 @@
 const express = require("express");
-const ExpressError = require('./expressError');
+const ExpressError = require('./helpers/expressError');
+const cors = require("cors");
 
 const app = express();
 
@@ -15,11 +16,11 @@ app.use(cors());
 
 const userRoutes = require('./routes/userRoutes');
 const authRoutes = require("./routes/authRoutes");
-const bookRoutes = require("./routes/bookRoutes");
+// const bookRoutes = require("./routes/bookRoutes");
 const collectionRoutes = require("./routes/collectionRoutes");
 
 app.use("/users", userRoutes);
-app.use("/books", bookRoutes);
+// app.use("/books", bookRoutes);
 app.use("/collections", collectionRoutes);
 app.use("/", authRoutes);
 
@@ -38,3 +39,5 @@ app.use(function(err, req, res, next) {
     error: { message, status }
   });
 });
+
+module.exports = app;
