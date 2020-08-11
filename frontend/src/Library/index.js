@@ -1,18 +1,16 @@
-import React, {useState} from 'react';
-import { Container, Row, Button } from 'react-bootstrap';
+import React, { useState, useContext, useEffect } from 'react';
+import { Container, Row, Button, Col } from 'react-bootstrap';
 
 import CollectionCard from '../shared/CollectionCard';
 import AddCollection from './AddCollection';
+import backendAPI from '../utils/backendAPI';
+import UserContext from '../utils/userContext';
 
-const dummyCollectionList = [
-  {name: "List One", number: 16, description: "This is a list of books", id: 1},
-  {name: "List Two", number: 16, description: "This is a list of books", id: 2},
-  {name: "List Three", number: 16, description: "This is a list of books", id: 3}]
-
-let tempID = 4;
 
 function Library() {
   const [adding, setAdding] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const { collections, setCollections } = useContext(UserContext);
 
   function showForm() {
     setAdding(true);
@@ -22,23 +20,41 @@ function Library() {
     setAdding(false);
   }
 
-  function addToCollections(title, description) {
-    let newCollection = {name: title, number: 0, description: description, id: tempID};
-    tempID++;
-    dummyCollectionList.push(newCollection);
+  async function addToCollections(title, description) {
+    let newCollection = { title: title, description: description };
+    let res = await backendAPI.newCollection(newCollection);
+    setCollections(cState => {
+      return {...cState, collections: [...cState.collections, res.collection]}
+    })
+
+
   }
+
+  async function getCollections() {
+    let fetchedCollections = await backendAPI.getCollectionsByUser();
+    setCollections(cState => {
+      return { collections: fetchedCollections }
+    });
+
+  }
+
+  useEffect(() => {
+    getCollections();
+    setLoading(false);
+  }, [])
 
   return (
     <Container className="mt-2">
-    <h3>Collections</h3>
-    <Row className="justify-content-center">
-      {dummyCollectionList.map(collection => {
-        return <CollectionCard key={collection.id} collection={collection} />
-      })}
-    </Row>
-    {!adding
-    ?<Button variant="primary" onClick={showForm}>Add a Collection</Button>
-    : <AddCollection closeForm={hideForm} addCollection={addToCollections} />}
+      <h3>Collections</h3>
+      {loading ? "Loading..." :
+        <Row className="justify-content-center">
+          {collections.collections ? collections.collections.map(collection => {
+            return <CollectionCard key={collection.id} collection={collection} />
+          }) : <Col>"You don't have any collections yet"</Col>}
+        </Row>}
+      {!adding
+        ? <Button variant="primary" onClick={showForm}>Add a Collection</Button>
+        : <AddCollection closeForm={hideForm} addCollection={addToCollections} />}
     </Container>
   )
 

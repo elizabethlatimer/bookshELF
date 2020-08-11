@@ -1,8 +1,14 @@
 import React from 'react';
 import { Navbar, Nav, NavDropdown} from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 function SiteNav({ isLoggedIn, logout }) {
+  const history = useHistory();
+  const handleLogout = () => {
+    logout();
+    history.push('/')
+  }
+
   const loggedInNav = <Navbar.Collapse id="basic-navbar-nav">
     <Nav className="ml-auto">
       <Nav.Link eventKey="1" as={Link} to="/library">My Library</Nav.Link>
@@ -11,7 +17,7 @@ function SiteNav({ isLoggedIn, logout }) {
           My Profile
         </NavDropdown.Item>
         <NavDropdown.Divider />
-        <NavDropdown.Item eventKey="3" as={Link} to="#" onClick={logout}>
+        <NavDropdown.Item eventKey="3" as={Link} to="#" onClick={handleLogout}>
           Logout
         </NavDropdown.Item>
       </NavDropdown>

@@ -24,6 +24,8 @@ class backendAPI {
     }
   }
 
+  //user methods
+
   static async loginUser(user) {
     let res = await this.request('login', user, "post");
     return res.token;
@@ -33,6 +35,29 @@ class backendAPI {
     let res = await this.request('users', user, "post");
     return res.token;
   }
+
+  static async getUser(username) {
+    let res = await this.request('users', {username});
+    delete res.password;
+    return res;
+  }
+
+  //static async updateUser(username, password, data) {}
+
+  //collection methods
+
+  static async newCollection(data) {
+    let res = await this.request('collections', data, "post");
+    return res;
+  }
+
+  static async getCollectionsByUser() {
+    let res = await this.request('collections');
+    return res.collections;
+  }
+
+
+  //book methods
 
 }
 

@@ -19,6 +19,7 @@ function AddCollection({closeForm, addCollection}) {
   function handleSubmit(evt) {
     evt.preventDefault();
     addCollection(formData.title, formData.description);
+    console.log(formData)
     closeForm();
   }
 

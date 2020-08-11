@@ -1,10 +1,10 @@
 import React, { useState, useContext } from 'react';
 import { Form, Button } from 'react-bootstrap';
-import UserContext from './utils/userContext';
+import UserContext from '../../utils/userContext';
 import { useHistory } from 'react-router-dom';
 
 
-const INITIAL_STATE = { email: "", password: "" }
+const INITIAL_STATE = { username: "", password: "" }
 
 function Login() {
 
@@ -18,7 +18,7 @@ function Login() {
     setFormState(formData => ({ ...formData, [name]: value }));
   }
 
-  function handleSubmit(evt) {
+  async function handleSubmit(evt) {
     evt.preventDefault();
     try {
       await login(formState);
@@ -32,11 +32,12 @@ function Login() {
 
   return (
     <Form onSubmit={handleSubmit}>
-      <Form.Group controlId="formEmail">
+      <Form.Group controlId="username">
         <Form.Control
-          type="email"
-          placeholder={"Email"}
-          value={formState.email}
+          type="text"
+          placeholder={"Username"}
+          name="username"
+          value={formState.username}
           onChange={handleChange} />
       </Form.Group>
 
@@ -44,6 +45,7 @@ function Login() {
         <Form.Control
           type="password"
           placeholder={"Password"}
+          name="password"
           value={formState.password}
           onChange={handleChange} />
       </Form.Group>
